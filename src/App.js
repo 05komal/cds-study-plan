@@ -100,12 +100,16 @@ function FocusTimer({ onClose }) {
     saved.savedTimes || { focus: DURATIONS.focus, short: DURATIONS.short, long: DURATIONS.long }
   );
   const tRef = useRef(); const sRef = useRef();
+  const timeLeftRef = useRef(timeLeft);
 
   const total = DURATIONS[mode];
   const pct = ((total - timeLeft) / total) * 100;
   const r = 75; const circ = 2 * Math.PI * r;
   const modeColor = { focus: "#a8d060", short: "#f0c040", long: "#80c8f0" }[mode];
   const modeLabel = { focus: "MISSION", short: "RECON", long: "DEBRIEF" }[mode];
+
+  // Keep ref in sync so useEffect can read latest timeLeft without it as a dependency
+  useEffect(() => { timeLeftRef.current = timeLeft; }, [timeLeft]);
 
   // Persist everything to localStorage
   useEffect(() => {
@@ -141,10 +145,10 @@ function FocusTimer({ onClose }) {
       clearInterval(tRef.current);
       clearInterval(sRef.current);
       // When paused, snapshot current timeLeft into savedTimes for this mode
-      setSavedTimes(prev => ({ ...prev, [mode]: timeLeft }));
+      setSavedTimes(prev => ({ ...prev, [mode]: timeLeftRef.current }));
     }
     return () => { clearInterval(tRef.current); clearInterval(sRef.current); };
-  }, [running, mode]);
+  }, [running, mode]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // When switching modes: pause current, restore the saved time for the target mode
   const switchMode = m => {
