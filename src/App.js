@@ -59,12 +59,46 @@ const fmtStudy = s => { const h=Math.floor(s/3600),m=Math.floor((s%3600)/60); re
 
 const camoBg = `url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='120' height='120' fill='%23111a08'/%3E%3Cellipse cx='30' cy='25' rx='22' ry='14' fill='%23182210' opacity='0.9'/%3E%3Cellipse cx='85' cy='15' rx='18' ry='12' fill='%23141e0a' opacity='0.8'/%3E%3Cellipse cx='60' cy='55' rx='25' ry='16' fill='%23192308' opacity='0.7'/%3E%3Cellipse cx='10' cy='70' rx='20' ry='13' fill='%231a2410' opacity='0.8'/%3E%3Cellipse cx='100' cy='65' rx='18' ry='14' fill='%23161e0c' opacity='0.7'/%3E%3Cellipse cx='45' cy='95' rx='24' ry='15' fill='%23182210' opacity='0.8'/%3E%3Cellipse cx='95' cy='100' rx='20' ry='12' fill='%231c2612' opacity='0.7'/%3E%3C/svg%3E")`;
 
+// Load persisted timer state from localStorage
+function loadState() {
+  try { return JSON.parse(localStorage.getItem("cds_timer") || "{}"); }
+  catch { return {}; }
+}
+function saveState(data) {
+  try { localStorage.setItem("cds_timer", JSON.stringify(data)); } catch {}
+}
+function todayKey() {
+  const d = new Date();
+  return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
+}
+function loadDailyStats() {
+  try {
+    const raw = JSON.parse(localStorage.getItem("cds_daily") || "{}");
+    // If saved date is today return it, otherwise start fresh
+    if (raw.date === todayKey()) return raw;
+    return { date: todayKey(), focus: 0, breakTime: 0 };
+  } catch { return { date: todayKey(), focus: 0, breakTime: 0 }; }
+}
+function saveDailyStats(focus, breakTime) {
+  try { localStorage.setItem("cds_daily", JSON.stringify({ date: todayKey(), focus, breakTime })); } catch {}
+}
+
 function FocusTimer({ onClose }) {
-  const [mode, setMode] = useState("focus");
-  const [timeLeft, setTimeLeft] = useState(DURATIONS.focus);
+  const saved = loadState();
+  const [mode, setMode] = useState(saved.mode || "focus");
+  const [timeLeft, setTimeLeft] = useState(saved.timeLeft ?? DURATIONS[saved.mode || "focus"]);
   const [running, setRunning] = useState(false);
-  const [sessions, setSessions] = useState(0);
-  const [studied, setStudied] = useState(0);
+  const [sessions, setSessions] = useState(saved.sessions || 0);
+  const [totalFocus, setTotalFocus] = useState(saved.totalFocus || 0);   // all-time
+  const [totalBreak, setTotalBreak] = useState(saved.totalBreak || 0);   // all-time
+  const daily = loadDailyStats();
+  const [dailyFocus, setDailyFocus] = useState(daily.focus || 0);        // today only
+  const [dailyBreak, setDailyBreak] = useState(daily.breakTime || 0);    // today only
+  // savedTimes holds the paused timeLeft for EACH mode independently
+  // e.g. { focus: 18*60+42, short: 5*60, long: 15*60 }
+  const [savedTimes, setSavedTimes] = useState(
+    saved.savedTimes || { focus: DURATIONS.focus, short: DURATIONS.short, long: DURATIONS.long }
+  );
   const tRef = useRef(); const sRef = useRef();
 
   const total = DURATIONS[mode];
@@ -73,18 +107,63 @@ function FocusTimer({ onClose }) {
   const modeColor = { focus: "#a8d060", short: "#f0c040", long: "#80c8f0" }[mode];
   const modeLabel = { focus: "MISSION", short: "RECON", long: "DEBRIEF" }[mode];
 
+  // Persist everything to localStorage
+  useEffect(() => {
+    saveState({ mode, timeLeft, sessions, totalFocus, totalBreak, savedTimes });
+  }, [mode, timeLeft, sessions, totalFocus, totalBreak, savedTimes]);
+
+  // Persist daily stats separately (survives timer reset)
+  useEffect(() => {
+    saveDailyStats(dailyFocus, dailyBreak);
+  }, [dailyFocus, dailyBreak]);
+
   useEffect(() => {
     if (running) {
-      tRef.current = setInterval(() => setTimeLeft(t => {
-        if (t <= 1) { clearInterval(tRef.current); clearInterval(sRef.current); setRunning(false); if (mode==="focus") setSessions(s=>s+1); return 0; }
-        return t - 1;
-      }), 1000);
-      if (mode === "focus") sRef.current = setInterval(() => setStudied(s => s+1), 1000);
-    } else { clearInterval(tRef.current); clearInterval(sRef.current); }
+      tRef.current = setInterval(() => {
+        setTimeLeft(t => {
+          if (t <= 1) {
+            clearInterval(tRef.current);
+            clearInterval(sRef.current);
+            setRunning(false);
+            if (mode === "focus") setSessions(s => s + 1);
+            // Reset that mode's saved time back to full after completing
+            setSavedTimes(prev => ({ ...prev, [mode]: DURATIONS[mode] }));
+            return 0;
+          }
+          return t - 1;
+        });
+      }, 1000);
+      sRef.current = setInterval(() => {
+        if (mode === "focus") { setTotalFocus(s => s + 1); setDailyFocus(s => s + 1); }
+        else { setTotalBreak(s => s + 1); setDailyBreak(s => s + 1); }
+      }, 1000);
+    } else {
+      clearInterval(tRef.current);
+      clearInterval(sRef.current);
+      // When paused, snapshot current timeLeft into savedTimes for this mode
+      setSavedTimes(prev => ({ ...prev, [mode]: timeLeft }));
+    }
     return () => { clearInterval(tRef.current); clearInterval(sRef.current); };
   }, [running, mode]);
 
-  const switchMode = m => { setMode(m); setTimeLeft(DURATIONS[m]); setRunning(false); };
+  // When switching modes: pause current, restore the saved time for the target mode
+  const switchMode = m => {
+    setRunning(false);
+    // Save current position before switching
+    setSavedTimes(prev => ({ ...prev, [mode]: timeLeft }));
+    setMode(m);
+    // Restore exactly where that mode was last left — or full duration if untouched
+    setTimeLeft(savedTimes[m] ?? DURATIONS[m]);
+  };
+
+  const clearAll = () => {
+    // Reset timer countdown & session count — but keep daily study total intact
+    setSessions(0); setTotalFocus(0); setTotalBreak(0);
+    setMode("focus"); setTimeLeft(DURATIONS.focus); setRunning(false);
+    setSavedTimes({ focus: DURATIONS.focus, short: DURATIONS.short, long: DURATIONS.long });
+    saveState({});
+    // dailyFocus & dailyBreak are intentionally NOT reset here
+  };
 
   return (
     <div style={{position:"fixed",inset:0,zIndex:9999,background:"rgba(4,8,2,0.95)",backdropFilter:"blur(12px)",display:"flex",alignItems:"center",justifyContent:"center",padding:"1rem"}}>
@@ -92,7 +171,7 @@ function FocusTimer({ onClose }) {
         {["tl","tr","bl","br"].map(p=>(
           <div key={p} style={{position:"absolute",[p[0]==="t"?"top":"bottom"]:"0",[p[1]==="l"?"left":"right"]:"0",width:"16px",height:"16px",borderTop:p[0]==="t"?"2px solid #a8d060":undefined,borderBottom:p[0]==="b"?"2px solid #a8d060":undefined,borderLeft:p[1]==="l"?"2px solid #a8d060":undefined,borderRight:p[1]==="r"?"2px solid #a8d060":undefined}}/>
         ))}
-        <button onClick={onClose} style={{position:"absolute",top:"0.8rem",right:"0.8rem",background:"rgba(168,208,96,0.1)",border:"1px solid rgba(168,208,96,0.3)",color:"#a8d060",fontSize:"0.9rem",width:"28px",height:"28px",cursor:"pointer",lineHeight:1,borderRadius:"2px"}}>✕</button>
+        <button onClick={()=>{ clearAll(); onClose(); }} style={{position:"absolute",top:"0.8rem",right:"0.8rem",background:"rgba(168,208,96,0.1)",border:"1px solid rgba(168,208,96,0.3)",color:"#a8d060",fontSize:"0.9rem",width:"28px",height:"28px",cursor:"pointer",lineHeight:1,borderRadius:"2px"}}>✕</button>
 
         <div style={{textAlign:"center",marginBottom:"1.2rem"}}>
           <div style={{fontSize:"clamp(0.88rem,2.2vw,1rem)",letterSpacing:"0.35em",color:"#a8d060",textTransform:"uppercase"}}>⚔ COMBAT FOCUS MODE ⚔</div>
@@ -119,23 +198,55 @@ function FocusTimer({ onClose }) {
           </div>
         </div>
 
-        <div style={{display:"flex",gap:"0.6rem",justifyContent:"center",marginBottom:"1.4rem"}}>
+        {/* Paused banner — shows when timer is mid-session but stopped */}
+        {!running && timeLeft < DURATIONS[mode] && timeLeft > 0 && (
+          <div style={{textAlign:"center",marginBottom:"0.7rem",padding:"0.45rem 0.8rem",border:"1px solid rgba(240,192,64,0.5)",background:"rgba(240,192,64,0.08)",borderRadius:"2px"}}>
+            <span style={{fontSize:"clamp(0.72rem,2vw,0.82rem)",color:"#f0c040",letterSpacing:"0.15em",textTransform:"uppercase"}}>
+              ⏸ PAUSED — {fmt(timeLeft)} remaining · tap RESUME to continue
+            </span>
+          </div>
+        )}
+
+        <div style={{display:"flex",gap:"0.6rem",justifyContent:"center",marginBottom:"1.4rem",flexWrap:"wrap"}}>
           <button onClick={()=>{setTimeLeft(DURATIONS[mode]);setRunning(false);}} style={{padding:"0.5rem clamp(0.7rem,3vw,1rem)",border:"1px solid rgba(168,208,96,0.25)",background:"rgba(168,208,96,0.05)",color:"#b0d070",fontSize:"clamp(0.7rem,2.5vw,0.8rem)",cursor:"pointer",letterSpacing:"0.1em",fontFamily:"'Courier New',monospace",borderRadius:"2px"}}>↺ RESET</button>
-          <button onClick={()=>setRunning(r=>!r)} style={{padding:"0.5rem clamp(1rem,4vw,2rem)",border:`2px solid ${modeColor}`,background:running?"transparent":modeColor+"25",color:modeColor,fontSize:"clamp(0.78rem,2.5vw,0.9rem)",fontWeight:"bold",cursor:"pointer",letterSpacing:"0.12em",fontFamily:"'Courier New',monospace",borderRadius:"2px",boxShadow:running?"none":`0 0 18px ${modeColor}40`,transition:"all 0.2s"}}>
-            {running?"⏸ PAUSE":"▶ DEPLOY"}
+          <button onClick={()=>setRunning(r=>!r)}
+            style={{padding:"0.5rem clamp(1rem,4vw,2rem)",border:`2px solid ${modeColor}`,
+              background: running ? "transparent" : (!running && timeLeft < DURATIONS[mode] && timeLeft > 0) ? modeColor+"40" : modeColor+"25",
+              color:modeColor,fontSize:"clamp(0.78rem,2.5vw,0.9rem)",fontWeight:"bold",cursor:"pointer",
+              letterSpacing:"0.12em",fontFamily:"'Courier New',monospace",borderRadius:"2px",
+              boxShadow:running?"none":`0 0 18px ${modeColor}40`,transition:"all 0.2s"}}>
+            {running ? "⏸ PAUSE" : (!running && timeLeft < DURATIONS[mode] && timeLeft > 0) ? "▶ RESUME" : "▶ DEPLOY"}
           </button>
         </div>
 
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"0.6rem"}}>
-          {[["🎖️",sessions,"MISSIONS DONE","rgba(168,208,96,0.08)","rgba(168,208,96,0.2)","#a8d060"],["⏱",fmtStudy(studied),"TIME IN FIELD","rgba(128,200,240,0.08)","rgba(128,200,240,0.2)","#80c8f0"]].map(([icon,val,label,bg,,col])=>(
-            <div key={label} style={{background:bg,border:`1px solid ${col}30`,borderRadius:"2px",padding:"clamp(0.6rem,2vw,0.85rem)",textAlign:"center"}}>
-              <div style={{fontSize:"0.85rem",marginBottom:"0.15rem"}}>{icon}</div>
-              <div style={{fontSize:"clamp(1.6rem,4.5vw,2rem)",fontWeight:"bold",color:col,fontFamily:"'Courier New',monospace"}}>{val}</div>
-              <div style={{fontSize:"clamp(0.82rem,2vw,0.9rem)",color:"#8ab860",letterSpacing:"0.1em",textTransform:"uppercase",marginTop:"0.15rem"}}>{label}</div>
+        {/* Stats — 4 boxes */}
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"0.6rem",marginBottom:"0.6rem"}}>
+          {[
+            ["🎖️", sessions,           "MISSIONS DONE",  "#a8d060", "rgba(168,208,96,0.08)"],
+            ["🔥", fmtStudy(totalFocus),"TOTAL FOCUS",    "#a8d060", "rgba(168,208,96,0.08)"],
+            ["☕", fmtStudy(totalBreak),"TOTAL BREAK",    "#f0c040", "rgba(240,192,64,0.08)"],
+            ["📅", `${Math.floor(dailyFocus/3600)}h ${Math.floor((dailyFocus%3600)/60)}m ${dailyFocus%60}s`, "TODAY'S STUDY", "#80c8f0", "rgba(128,200,240,0.08)"],
+          ].map(([icon,val,label,col,bg])=>(
+            <div key={label} style={{background:bg,border:`1px solid ${col}30`,borderRadius:"2px",padding:"clamp(0.5rem,2vw,0.75rem)",textAlign:"center"}}>
+              <div style={{fontSize:"0.85rem",marginBottom:"0.1rem"}}>{icon}</div>
+              <div style={{fontSize:"clamp(1.2rem,3.5vw,1.6rem)",fontWeight:"bold",color:col,fontFamily:"'Courier New',monospace",lineHeight:1.1}}>{val}</div>
+              <div style={{fontSize:"clamp(0.62rem,1.8vw,0.72rem)",color:"#8ab860",letterSpacing:"0.1em",textTransform:"uppercase",marginTop:"0.15rem"}}>{label}</div>
             </div>
           ))}
         </div>
-        <div style={{textAlign:"center",marginTop:"0.8rem",fontSize:"clamp(0.82rem,2vw,0.9rem)",color:"#7aaa48",letterSpacing:"0.06em"}}>25m mission → 5m recon → ×4 → 15m debrief</div>
+
+        {/* Saved indicator + clear button */}
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"0.4rem"}}>
+          <div style={{fontSize:"clamp(0.62rem,1.8vw,0.72rem)",color: (!running && timeLeft < DURATIONS[mode] && timeLeft > 0) ? "#f0c040" : "#5a8040",letterSpacing:"0.1em",transition:"color 0.3s"}}>
+            {(!running && timeLeft < DURATIONS[mode] && timeLeft > 0)
+              ? "💾 SESSION SAVED — close & reopen anytime"
+              : "✅ AUTO-SAVED — progress never lost"}
+          </div>
+          <button onClick={clearAll} style={{fontSize:"clamp(0.6rem,1.8vw,0.7rem)",color:"#884040",border:"1px solid rgba(200,60,60,0.3)",background:"rgba(200,60,60,0.06)",padding:"0.2rem 0.5rem",cursor:"pointer",letterSpacing:"0.1em",fontFamily:"'Courier New',monospace",borderRadius:"2px"}}>
+            🗑 CLEAR ALL
+          </button>
+        </div>
+        <div style={{textAlign:"center",marginTop:"0.4rem",fontSize:"clamp(0.72rem,2vw,0.82rem)",color:"#7aaa48",letterSpacing:"0.06em"}}>25m mission → 5m recon → ×4 → 15m debrief</div>
       </div>
     </div>
   );
