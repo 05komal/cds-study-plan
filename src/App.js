@@ -95,12 +95,12 @@ function FocusTimer({ onClose }) {
         <button onClick={onClose} style={{position:"absolute",top:"0.8rem",right:"0.8rem",background:"rgba(168,208,96,0.1)",border:"1px solid rgba(168,208,96,0.3)",color:"#a8d060",fontSize:"0.9rem",width:"28px",height:"28px",cursor:"pointer",lineHeight:1,borderRadius:"2px"}}>✕</button>
 
         <div style={{textAlign:"center",marginBottom:"1.2rem"}}>
-          <div style={{fontSize:"clamp(0.6rem,2vw,0.72rem)",letterSpacing:"0.35em",color:"#a8d060",textTransform:"uppercase"}}>⚔ COMBAT FOCUS MODE ⚔</div>
+          <div style={{fontSize:"clamp(0.88rem,2.2vw,1rem)",letterSpacing:"0.35em",color:"#a8d060",textTransform:"uppercase"}}>⚔ COMBAT FOCUS MODE ⚔</div>
         </div>
 
         <div style={{display:"flex",gap:"0.4rem",justifyContent:"center",marginBottom:"1.5rem",flexWrap:"wrap"}}>
           {[["focus","MISSION"],["short","RECON"],["long","DEBRIEF"]].map(([m,label])=>(
-            <button key={m} onClick={()=>switchMode(m)} style={{padding:"0.35rem clamp(0.5rem,2vw,0.85rem)",border:`1px solid ${mode===m?modeColor+"90":"rgba(168,208,96,0.15)"}`,background:mode===m?modeColor+"22":"transparent",color:mode===m?modeColor:"#4a6030",fontSize:"clamp(0.6rem,2vw,0.72rem)",letterSpacing:"0.1em",cursor:"pointer",fontFamily:"'Courier New',monospace",borderRadius:"2px",transition:"all 0.2s"}}>
+            <button key={m} onClick={()=>switchMode(m)} style={{padding:"0.35rem clamp(0.5rem,2vw,0.85rem)",border:`1px solid ${mode===m?modeColor+"90":"rgba(168,208,96,0.15)"}`,background:mode===m?modeColor+"22":"transparent",color:mode===m?modeColor:"#4a6030",fontSize:"clamp(0.88rem,2.2vw,1rem)",letterSpacing:"0.1em",cursor:"pointer",fontFamily:"'Courier New',monospace",borderRadius:"2px",transition:"all 0.2s"}}>
               {label}
             </button>
           ))}
@@ -114,13 +114,13 @@ function FocusTimer({ onClose }) {
               style={{transition:"stroke-dashoffset 0.9s linear, stroke 0.3s", filter:`drop-shadow(0 0 8px ${modeColor})`}}/>
           </svg>
           <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
-            <div style={{fontSize:"clamp(2rem,8vw,2.8rem)",fontWeight:"bold",color:"#e8f0d0",fontFamily:"'Courier New',monospace",letterSpacing:"0.04em",textShadow:`0 0 20px ${modeColor}70`}}>{fmt(timeLeft)}</div>
-            <div style={{fontSize:"clamp(0.55rem,1.8vw,0.65rem)",color:modeColor,letterSpacing:"0.2em",textTransform:"uppercase",marginTop:"0.2rem"}}>{modeLabel}</div>
+            <div style={{fontSize:"clamp(2.5rem,9vw,3.4rem)",fontWeight:"bold",color:"#e8f0d0",fontFamily:"'Courier New',monospace",letterSpacing:"0.04em",textShadow:`0 0 20px ${modeColor}70`}}>{fmt(timeLeft)}</div>
+            <div style={{fontSize:"clamp(0.82rem,2vw,0.9rem)",color:modeColor,letterSpacing:"0.2em",textTransform:"uppercase",marginTop:"0.2rem"}}>{modeLabel}</div>
           </div>
         </div>
 
         <div style={{display:"flex",gap:"0.6rem",justifyContent:"center",marginBottom:"1.4rem"}}>
-          <button onClick={()=>{setTimeLeft(DURATIONS[mode]);setRunning(false);}} style={{padding:"0.5rem clamp(0.7rem,3vw,1rem)",border:"1px solid rgba(168,208,96,0.25)",background:"rgba(168,208,96,0.05)",color:"#7a9a50",fontSize:"clamp(0.7rem,2.5vw,0.8rem)",cursor:"pointer",letterSpacing:"0.1em",fontFamily:"'Courier New',monospace",borderRadius:"2px"}}>↺ RESET</button>
+          <button onClick={()=>{setTimeLeft(DURATIONS[mode]);setRunning(false);}} style={{padding:"0.5rem clamp(0.7rem,3vw,1rem)",border:"1px solid rgba(168,208,96,0.25)",background:"rgba(168,208,96,0.05)",color:"#b0d070",fontSize:"clamp(0.7rem,2.5vw,0.8rem)",cursor:"pointer",letterSpacing:"0.1em",fontFamily:"'Courier New',monospace",borderRadius:"2px"}}>↺ RESET</button>
           <button onClick={()=>setRunning(r=>!r)} style={{padding:"0.5rem clamp(1rem,4vw,2rem)",border:`2px solid ${modeColor}`,background:running?"transparent":modeColor+"25",color:modeColor,fontSize:"clamp(0.78rem,2.5vw,0.9rem)",fontWeight:"bold",cursor:"pointer",letterSpacing:"0.12em",fontFamily:"'Courier New',monospace",borderRadius:"2px",boxShadow:running?"none":`0 0 18px ${modeColor}40`,transition:"all 0.2s"}}>
             {running?"⏸ PAUSE":"▶ DEPLOY"}
           </button>
@@ -130,12 +130,12 @@ function FocusTimer({ onClose }) {
           {[["🎖️",sessions,"MISSIONS DONE","rgba(168,208,96,0.08)","rgba(168,208,96,0.2)","#a8d060"],["⏱",fmtStudy(studied),"TIME IN FIELD","rgba(128,200,240,0.08)","rgba(128,200,240,0.2)","#80c8f0"]].map(([icon,val,label,bg,,col])=>(
             <div key={label} style={{background:bg,border:`1px solid ${col}30`,borderRadius:"2px",padding:"clamp(0.6rem,2vw,0.85rem)",textAlign:"center"}}>
               <div style={{fontSize:"0.85rem",marginBottom:"0.15rem"}}>{icon}</div>
-              <div style={{fontSize:"clamp(1.2rem,4vw,1.6rem)",fontWeight:"bold",color:col,fontFamily:"'Courier New',monospace"}}>{val}</div>
-              <div style={{fontSize:"clamp(0.55rem,1.8vw,0.62rem)",color:"#4a6030",letterSpacing:"0.1em",textTransform:"uppercase",marginTop:"0.15rem"}}>{label}</div>
+              <div style={{fontSize:"clamp(1.6rem,4.5vw,2rem)",fontWeight:"bold",color:col,fontFamily:"'Courier New',monospace"}}>{val}</div>
+              <div style={{fontSize:"clamp(0.82rem,2vw,0.9rem)",color:"#8ab860",letterSpacing:"0.1em",textTransform:"uppercase",marginTop:"0.15rem"}}>{label}</div>
             </div>
           ))}
         </div>
-        <div style={{textAlign:"center",marginTop:"0.8rem",fontSize:"clamp(0.55rem,1.8vw,0.62rem)",color:"#3a4a28",letterSpacing:"0.06em"}}>25m mission → 5m recon → ×4 → 15m debrief</div>
+        <div style={{textAlign:"center",marginTop:"0.8rem",fontSize:"clamp(0.82rem,2vw,0.9rem)",color:"#7aaa48",letterSpacing:"0.06em"}}>25m mission → 5m recon → ×4 → 15m debrief</div>
       </div>
     </div>
   );
@@ -157,13 +157,13 @@ export default function CDSPlan() {
       <style>{`
         * { box-sizing: border-box; }
         body { margin: 0; }
-        .day-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr)); gap: 1rem; }
+        .day-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr)); gap: 1.2rem; }
         @media (max-width: 480px) { .day-grid { grid-template-columns: 1fr; } }
         .week-tabs { display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap; }
         .week-tab { padding: 0.55rem 1rem; }
-        @media (max-width: 480px) { .week-tab { padding: 0.5rem 0.6rem; font-size: 0.65rem !important; letter-spacing: 0.08em !important; } }
-        .header-title { font-size: clamp(1.6rem, 5vw, 3rem); }
-        .focus-btn { font-size: clamp(0.7rem, 2vw, 0.82rem); }
+        @media (max-width: 480px) { .week-tab { padding: 0.5rem 0.7rem; font-size: 0.85rem !important; letter-spacing: 0.06em !important; } }
+        .header-title { font-size: clamp(2.2rem, 6vw, 3.8rem); }
+        .focus-btn { font-size: clamp(0.9rem, 2.5vw, 1.05rem); }
         .weight-topics { display: flex; flex-wrap: wrap; gap: 0.35rem; }
       `}</style>
 
@@ -179,7 +179,7 @@ export default function CDSPlan() {
           <h1 className="header-title" style={{fontWeight:"900",color:"#e8f0d0",letterSpacing:"0.08em",margin:"0.3rem 0",textTransform:"uppercase",textShadow:"0 0 30px rgba(168,208,96,0.4),3px 3px 0 rgba(0,0,0,0.6)"}}>
             30-DAY MISSION
           </h1>
-          <div style={{fontSize:"clamp(0.6rem,2vw,0.72rem)",letterSpacing:"clamp(0.1em,1vw,0.3em)",color:"#6a8a40",textTransform:"uppercase",marginTop:"0.3rem"}}>ENGLISH · GENERAL KNOWLEDGE · CLASSIFIED STUDY PLAN</div>
+          <div style={{fontSize:"clamp(0.88rem,2.2vw,1rem)",letterSpacing:"clamp(0.1em,1vw,0.3em)",color:"#a8d060",textTransform:"uppercase",marginTop:"0.3rem"}}>ENGLISH · GENERAL KNOWLEDGE · CLASSIFIED STUDY PLAN</div>
 
           <button onClick={()=>setShowTimer(true)} className="focus-btn" style={{marginTop:"1rem",padding:"0.55rem clamp(1rem,4vw,1.8rem)",border:"2px solid #a8d060",background:"rgba(168,208,96,0.1)",color:"#a8d060",fontFamily:"'Courier New',monospace",letterSpacing:"0.18em",cursor:"pointer",textTransform:"uppercase",boxShadow:"0 0 18px rgba(168,208,96,0.2)",transition:"all 0.2s"}}>
             ⏱ COMBAT FOCUS TIMER
@@ -187,14 +187,14 @@ export default function CDSPlan() {
 
           {/* Progress */}
           <div style={{maxWidth:"520px",margin:"1.2rem auto 0",padding:"0 0.5rem"}}>
-            <div style={{display:"flex",justifyContent:"space-between",fontSize:"clamp(0.6rem,2vw,0.72rem)",letterSpacing:"0.12em",color:"#6a8a40",marginBottom:"0.35rem"}}>
+            <div style={{display:"flex",justifyContent:"space-between",fontSize:"clamp(0.88rem,2.2vw,1rem)",letterSpacing:"0.12em",color:"#a8d060",marginBottom:"0.35rem"}}>
               <span>MISSION PROGRESS</span><span>{done}/30 CLEARED</span>
             </div>
             <div style={{background:"rgba(255,255,255,0.06)",height:"10px",border:"1px solid rgba(168,208,96,0.25)"}}>
               <div style={{height:"100%",background:"linear-gradient(90deg,#5a8020,#a8d060)",width:`${(done/30)*100}%`,transition:"width 0.5s ease",boxShadow:"0 0 10px rgba(168,208,96,0.5)"}}/>
             </div>
           </div>
-          <div style={{fontSize:"clamp(0.58rem,1.8vw,0.68rem)",color:"#4a6030",marginTop:"0.5rem",letterSpacing:"0.1em"}}>{done}/30 DAYS COMPLETED</div>
+          <div style={{fontSize:"clamp(0.85rem,2vw,0.95rem)",color:"#8ab860",marginTop:"0.5rem",letterSpacing:"0.1em"}}>{done}/30 DAYS COMPLETED</div>
         </div>
       </div>
 
@@ -204,7 +204,7 @@ export default function CDSPlan() {
           const m=weekMeta[w]; const active=selWeek===w;
           return (
             <button key={w} onClick={()=>{setSelWeek(w);setExpanded(null);}} className="week-tab"
-              style={{border:`2px solid ${active?m.color:"rgba(168,208,96,0.15)"}`,background:active?m.color+"18":"transparent",color:active?m.color:"#4a6030",fontSize:"clamp(0.62rem,2vw,0.75rem)",fontFamily:"'Courier New',monospace",letterSpacing:"0.12em",cursor:"pointer",transition:"all 0.2s",textTransform:"uppercase",boxShadow:active?`0 0 14px ${m.color}30`:"none"}}>
+              style={{border:`2px solid ${active?m.color:"rgba(168,208,96,0.15)"}`,background:active?m.color+"18":"transparent",color:active?m.color:"#8ab860",fontSize:"clamp(0.9rem,2.2vw,1.05rem)",fontFamily:"'Courier New',monospace",letterSpacing:"0.12em",cursor:"pointer",transition:"all 0.2s",textTransform:"uppercase",boxShadow:active?`0 0 14px ${m.color}30`:"none"}}>
               {m.icon} WK{w} {m.name}
             </button>
           );
@@ -212,18 +212,18 @@ export default function CDSPlan() {
       </div>
 
       {/* ── WEEK BANNER ── */}
-      <div style={{maxWidth:"960px",margin:"1rem auto 0",padding:"0 clamp(0.6rem,3vw,1rem)"}}>
+      <div style={{maxWidth:"1400px",margin:"1rem auto 0",padding:"0 clamp(1rem,4vw,3rem)"}}>
         <div style={{border:`1px solid ${wm.color}40`,background:`${wm.color}08`,padding:"clamp(0.7rem,2vw,1rem) clamp(0.8rem,3vw,1.2rem)",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:"0.5rem",marginBottom:"1rem"}}>
           <div>
-            <div style={{fontSize:"clamp(0.58rem,1.8vw,0.68rem)",letterSpacing:"0.28em",color:wm.color,textTransform:"uppercase"}}>PHASE BRIEFING</div>
-            <div style={{fontSize:"clamp(0.88rem,2.5vw,1.05rem)",fontWeight:"bold",color:"#e8f0d0",marginTop:"0.2rem",letterSpacing:"0.08em"}}>{wm.icon} WEEK {selWeek}: {wm.name}</div>
+            <div style={{fontSize:"clamp(0.85rem,2vw,0.95rem)",letterSpacing:"0.28em",color:wm.color,textTransform:"uppercase"}}>PHASE BRIEFING</div>
+            <div style={{fontSize:"clamp(1.2rem,3vw,1.4rem)",fontWeight:"bold",color:"#e8f0d0",marginTop:"0.2rem",letterSpacing:"0.08em"}}>{wm.icon} WEEK {selWeek}: {wm.name}</div>
           </div>
-          <div style={{fontSize:"clamp(0.65rem,2vw,0.78rem)",color:"#6a8a40",fontStyle:"italic",letterSpacing:"0.06em"}}>"{wm.desc}"</div>
+          <div style={{fontSize:"clamp(0.92rem,2.2vw,1.05rem)",color:"#a8d060",fontStyle:"italic",letterSpacing:"0.06em"}}>"{wm.desc}"</div>
         </div>
 
         {/* ── WEIGHTAGE LEGEND ── */}
         <div style={{display:"flex",gap:"0.5rem",flexWrap:"wrap",marginBottom:"1rem",alignItems:"center"}}>
-          <span style={{fontSize:"clamp(0.58rem,1.8vw,0.65rem)",letterSpacing:"0.18em",color:"#4a6030",textTransform:"uppercase"}}>PRIORITY:</span>
+          <span style={{fontSize:"clamp(0.85rem,2vw,0.95rem)",letterSpacing:"0.18em",color:"#8ab860",textTransform:"uppercase"}}>PRIORITY:</span>
           {Object.entries(weightStyle).map(([key,ws])=>(
             <div key={key} style={{display:"flex",alignItems:"center",gap:"0.3rem",fontSize:"clamp(0.6rem,2vw,0.68rem)",color:ws.color,border:`1px solid ${ws.border}`,padding:"0.15rem 0.5rem",background:ws.bg,letterSpacing:"0.08em"}}>
               {ws.label}
@@ -252,31 +252,31 @@ export default function CDSPlan() {
                   <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:"0.6rem",gap:"0.5rem"}}>
                     <div style={{display:"flex",alignItems:"center",gap:"0.5rem"}}>
                       <div style={{width:"clamp(36px,10vw,44px)",height:"clamp(36px,10vw,44px)",border:`2px solid ${isDone?s.color:"rgba(168,208,96,0.3)"}`,display:"flex",alignItems:"center",justifyContent:"center",background:isDone?s.bg:"rgba(168,208,96,0.04)",flexShrink:0}}>
-                        <span style={{fontSize:"clamp(0.68rem,2.5vw,0.8rem)",fontWeight:"900",color:isDone?s.color:"#6a8a40"}}>{isDone?"✓":`${d.day}`}</span>
+                        <span style={{fontSize:"clamp(0.68rem,2.5vw,0.8rem)",fontWeight:"900",color:isDone?s.color:"#a8d060"}}>{isDone?"✓":`${d.day}`}</span>
                       </div>
                       <div>
                         <div style={{display:"flex",gap:"0.35rem",alignItems:"center",flexWrap:"wrap"}}>
-                          <span style={{fontSize:"clamp(0.58rem,1.8vw,0.68rem)",letterSpacing:"0.15em",color:s.color,border:`1px solid ${s.border}`,padding:"0.1rem 0.4rem",background:s.bg,textTransform:"uppercase"}}>{s.icon} {d.subject}</span>
-                          <span style={{fontSize:"clamp(0.55rem,1.8vw,0.65rem)",color:ws.color,border:`1px solid ${ws.border}`,padding:"0.1rem 0.38rem",background:ws.bg,textTransform:"uppercase",letterSpacing:"0.1em"}}>{ws.label}</span>
+                          <span style={{fontSize:"clamp(0.85rem,2vw,0.95rem)",letterSpacing:"0.15em",color:s.color,border:`1px solid ${s.border}`,padding:"0.1rem 0.4rem",background:s.bg,textTransform:"uppercase"}}>{s.icon} {d.subject}</span>
+                          <span style={{fontSize:"clamp(0.82rem,2vw,0.9rem)",color:ws.color,border:`1px solid ${ws.border}`,padding:"0.1rem 0.38rem",background:ws.bg,textTransform:"uppercase",letterSpacing:"0.1em"}}>{ws.label}</span>
                         </div>
-                        <div style={{fontSize:"clamp(0.58rem,1.8vw,0.66rem)",color:"#4a6030",letterSpacing:"0.1em",marginTop:"0.2rem"}}>⏱ {d.hours} recommended</div>
+                        <div style={{fontSize:"clamp(0.85rem,2vw,0.95rem)",color:"#8ab860",letterSpacing:"0.1em",marginTop:"0.2rem"}}>⏱ {d.hours} recommended</div>
                       </div>
                     </div>
-                    <span style={{fontSize:"0.75rem",color:"#4a6030",display:"inline-block",transform:isOpen?"rotate(180deg)":"rotate(0)",transition:"transform 0.2s",marginTop:"0.3rem",flexShrink:0}}>▼</span>
+                    <span style={{fontSize:"0.75rem",color:"#8ab860",display:"inline-block",transform:isOpen?"rotate(180deg)":"rotate(0)",transition:"transform 0.2s",marginTop:"0.3rem",flexShrink:0}}>▼</span>
                   </div>
 
                   {/* Topic */}
                   <div style={{borderLeft:`3px solid ${s.color}`,paddingLeft:"0.7rem",marginBottom:"0.8rem"}}>
-                    <div style={{fontSize:"clamp(0.95rem,3vw,1.08rem)",fontWeight:"900",color:"#e8f0d0",letterSpacing:"0.04em",textTransform:"uppercase",lineHeight:1.2}}>{d.topic}</div>
-                    <div style={{fontSize:"clamp(0.68rem,2.2vw,0.78rem)",color:"#7a9a60",marginTop:"0.2rem",letterSpacing:"0.06em"}}>{d.subtitle}</div>
+                    <div style={{fontSize:"clamp(1.2rem,3.2vw,1.4rem)",fontWeight:"900",color:"#e8f0d0",letterSpacing:"0.04em",textTransform:"uppercase",lineHeight:1.2}}>{d.topic}</div>
+                    <div style={{fontSize:"clamp(0.95rem,2.3vw,1.1rem)",color:"#b8d880",marginTop:"0.2rem",letterSpacing:"0.06em"}}>{d.subtitle}</div>
                   </div>
 
                   {/* High-weightage topics */}
                   <div style={{marginBottom:"0.8rem"}}>
-                    <div style={{fontSize:"clamp(0.55rem,1.8vw,0.62rem)",letterSpacing:"0.2em",color:"#4a6030",textTransform:"uppercase",marginBottom:"0.4rem"}}>▸ KEY TOPICS TO COVER</div>
+                    <div style={{fontSize:"clamp(0.82rem,2vw,0.9rem)",letterSpacing:"0.2em",color:"#8ab860",textTransform:"uppercase",marginBottom:"0.4rem"}}>▸ KEY TOPICS TO COVER</div>
                     <div className="weight-topics">
                       {d.weightTopics.map((t,i)=>(
-                        <span key={i} style={{fontSize:"clamp(0.58rem,1.8vw,0.68rem)",color:ws.color,background:ws.bg,border:`1px solid ${ws.border}`,padding:"0.18rem 0.5rem",letterSpacing:"0.06em",lineHeight:1.4}}>
+                        <span key={i} style={{fontSize:"clamp(0.85rem,2vw,0.95rem)",color:ws.color,background:ws.bg,border:`1px solid ${ws.border}`,padding:"0.18rem 0.5rem",letterSpacing:"0.06em",lineHeight:1.4}}>
                           {t}
                         </span>
                       ))}
@@ -285,12 +285,12 @@ export default function CDSPlan() {
 
                   {/* Tip box */}
                   <div style={{background:"rgba(168,208,96,0.05)",border:"1px solid rgba(168,208,96,0.15)",padding:"0.45rem 0.65rem",marginBottom:"0.7rem"}}>
-                    <span style={{fontSize:"clamp(0.58rem,1.8vw,0.66rem)",color:"#7a9a50",letterSpacing:"0.04em",fontStyle:"italic"}}>💡 {d.tip}</span>
+                    <span style={{fontSize:"clamp(0.85rem,2vw,0.95rem)",color:"#b0d070",letterSpacing:"0.04em",fontStyle:"italic"}}>💡 {d.tip}</span>
                   </div>
 
                   {/* Mark done */}
                   <button onClick={e=>{e.stopPropagation();toggle(d.day);}}
-                    style={{width:"100%",padding:"0.48rem",border:`1px solid ${isDone?s.color+"80":"rgba(168,208,96,0.2)"}`,background:isDone?s.bg:"transparent",color:isDone?s.color:"#4a6030",fontSize:"clamp(0.6rem,2vw,0.7rem)",letterSpacing:"0.15em",textTransform:"uppercase",cursor:"pointer",fontFamily:"'Courier New',monospace",transition:"all 0.2s"}}>
+                    style={{width:"100%",padding:"0.48rem",border:`1px solid ${isDone?s.color+"80":"rgba(168,208,96,0.2)"}`,background:isDone?s.bg:"transparent",color:isDone?s.color:"#8ab860",fontSize:"clamp(0.6rem,2vw,0.7rem)",letterSpacing:"0.15em",textTransform:"uppercase",cursor:"pointer",fontFamily:"'Courier New',monospace",transition:"all 0.2s"}}>
                     {isDone?"✓ MISSION COMPLETE":"◻ MARK AS COMPLETE"}
                   </button>
                 </div>
@@ -298,11 +298,11 @@ export default function CDSPlan() {
                 {/* Expanded tasks */}
                 {isOpen && (
                   <div style={{borderTop:"1px solid rgba(168,208,96,0.1)",padding:"0.8rem clamp(0.8rem,3vw,1rem) 1rem",background:"rgba(0,0,0,0.25)"}}>
-                    <div style={{fontSize:"clamp(0.58rem,1.8vw,0.65rem)",letterSpacing:"0.25em",color:"#4a6030",textTransform:"uppercase",marginBottom:"0.6rem"}}>▸ DAILY MISSION OBJECTIVES</div>
+                    <div style={{fontSize:"clamp(0.85rem,2vw,0.95rem)",letterSpacing:"0.25em",color:"#8ab860",textTransform:"uppercase",marginBottom:"0.6rem"}}>▸ DAILY MISSION OBJECTIVES</div>
                     {d.tasks.map((t,i)=>(
                       <div key={i} style={{display:"flex",gap:"0.55rem",alignItems:"flex-start",marginBottom:"0.5rem",paddingBottom:"0.5rem",borderBottom:i<d.tasks.length-1?"1px dashed rgba(168,208,96,0.08)":"none"}}>
-                        <span style={{color:s.color,fontWeight:"bold",fontSize:"clamp(0.68rem,2.2vw,0.78rem)",flexShrink:0,marginTop:"0.1rem"}}>[{i+1}]</span>
-                        <span style={{fontSize:"clamp(0.72rem,2.2vw,0.85rem)",color:"#a0b880",lineHeight:1.5}}>{t}</span>
+                        <span style={{color:s.color,fontWeight:"bold",fontSize:"clamp(0.95rem,2.3vw,1.1rem)",flexShrink:0,marginTop:"0.1rem"}}>[{i+1}]</span>
+                        <span style={{fontSize:"clamp(0.72rem,2.2vw,0.85rem)",color:"#c8e098",lineHeight:1.5}}>{t}</span>
                       </div>
                     ))}
                     <button onClick={e=>{e.stopPropagation();setShowTimer(true);}}
@@ -321,19 +321,19 @@ export default function CDSPlan() {
       <footer style={{background:"linear-gradient(180deg,rgba(8,14,4,0.98),#060a04)",borderTop:"3px solid rgba(168,208,96,0.25)",marginTop:"1rem",fontFamily:"'Courier New',monospace"}}>
 
         {/* Top footer grid */}
-        <div style={{maxWidth:"960px",margin:"0 auto",padding:"clamp(2rem,5vw,3rem) clamp(0.8rem,3vw,1.5rem)",display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(min(100%,200px),1fr))",gap:"2rem"}}>
+        <div style={{maxWidth:"1400px",margin:"0 auto",padding:"clamp(2rem,5vw,3rem) clamp(1rem,4vw,3rem)",display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(min(100%,220px),1fr))",gap:"2.5rem"}}>
 
           {/* Brand column */}
           <div>
             <div style={{display:"inline-block",border:"2px solid rgba(168,208,96,0.5)",padding:"0.2rem 0.8rem",marginBottom:"1rem"}}>
-              <span style={{fontSize:"clamp(0.75rem,2.5vw,0.9rem)",fontWeight:"900",letterSpacing:"0.3em",color:"#a8d060",textTransform:"uppercase"}}>⚔ CDS MISSION</span>
+              <span style={{fontSize:"clamp(1rem,2.5vw,1.15rem)",fontWeight:"900",letterSpacing:"0.3em",color:"#a8d060",textTransform:"uppercase"}}>⚔ CDS MISSION</span>
             </div>
-            <p style={{fontSize:"clamp(0.68rem,2vw,0.78rem)",color:"#5a7040",lineHeight:1.8,letterSpacing:"0.04em",margin:"0 0 1rem"}}>
+            <p style={{fontSize:"clamp(0.95rem,2.3vw,1.1rem)",color:"#9ac850",lineHeight:1.8,letterSpacing:"0.04em",margin:"0 0 1rem"}}>
               A 30-day classified study plan for CDS Women's Entry aspirants. Built to help you clear English & GK with military precision.
             </p>
             <div style={{display:"flex",gap:"0.5rem",flexWrap:"wrap"}}>
               {Object.entries(subjStyle).map(([subj,s])=>(
-                <div key={subj} style={{display:"flex",alignItems:"center",gap:"0.3rem",fontSize:"clamp(0.58rem,1.8vw,0.65rem)",color:s.color,border:`1px solid ${s.border}`,padding:"0.15rem 0.45rem",background:s.bg,letterSpacing:"0.08em"}}>
+                <div key={subj} style={{display:"flex",alignItems:"center",gap:"0.3rem",fontSize:"clamp(0.85rem,2vw,0.95rem)",color:s.color,border:`1px solid ${s.border}`,padding:"0.15rem 0.45rem",background:s.bg,letterSpacing:"0.08em"}}>
                   {s.icon} {subj}
                 </div>
               ))}
@@ -342,7 +342,7 @@ export default function CDSPlan() {
 
           {/* Quick Links */}
           <div>
-            <div style={{fontSize:"clamp(0.65rem,2vw,0.72rem)",letterSpacing:"0.35em",color:"#a8d060",textTransform:"uppercase",marginBottom:"1rem",paddingBottom:"0.5rem",borderBottom:"1px solid rgba(168,208,96,0.15)"}}>QUICK LINKS</div>
+            <div style={{fontSize:"clamp(0.92rem,2.2vw,1.05rem)",letterSpacing:"0.35em",color:"#a8d060",textTransform:"uppercase",marginBottom:"1rem",paddingBottom:"0.5rem",borderBottom:"1px solid rgba(168,208,96,0.15)"}}>QUICK LINKS</div>
             {[["🪖","Week 1 – Foundation",()=>{setSelWeek(1);setExpanded(null);window.scrollTo({top:0,behavior:"smooth"});}],
               ["🛡️","Week 2 – Building",()=>{setSelWeek(2);setExpanded(null);window.scrollTo({top:0,behavior:"smooth"});}],
               ["💥","Week 3 – Acceleration",()=>{setSelWeek(3);setExpanded(null);window.scrollTo({top:0,behavior:"smooth"});}],
@@ -353,56 +353,62 @@ export default function CDSPlan() {
                 onMouseEnter={e=>e.currentTarget.style.color="#a8d060"}
                 onMouseLeave={e=>e.currentTarget.style.color="#5a7040"}>
                 <span style={{fontSize:"0.85rem"}}>{icon}</span>
-                <span style={{fontSize:"clamp(0.68rem,2vw,0.78rem)",color:"inherit",letterSpacing:"0.06em"}}>{label}</span>
+                <span style={{fontSize:"clamp(0.95rem,2.3vw,1.1rem)",color:"inherit",letterSpacing:"0.06em"}}>{label}</span>
               </div>
             ))}
           </div>
 
           {/* Exam Info */}
           <div>
-            <div style={{fontSize:"clamp(0.65rem,2vw,0.72rem)",letterSpacing:"0.35em",color:"#a8d060",textTransform:"uppercase",marginBottom:"1rem",paddingBottom:"0.5rem",borderBottom:"1px solid rgba(168,208,96,0.15)"}}>EXAM INTEL</div>
+            <div style={{fontSize:"clamp(0.92rem,2.2vw,1.05rem)",letterSpacing:"0.35em",color:"#a8d060",textTransform:"uppercase",marginBottom:"1rem",paddingBottom:"0.5rem",borderBottom:"1px solid rgba(168,208,96,0.15)"}}>EXAM INTEL</div>
             {[["📋","Conducted by UPSC"],["📅","Held twice a year"],["📝","English: 100 marks"],["🌐","GK: 100 marks"],["⏳","2 hours per paper"],["🎯","0.33 negative marking"],["🔗","upsc.gov.in for official info"]
             ].map(([icon,info])=>(
               <div key={info} style={{display:"flex",alignItems:"flex-start",gap:"0.5rem",padding:"0.35rem 0",borderBottom:"1px dashed rgba(168,208,96,0.07)"}}>
                 <span style={{fontSize:"0.8rem",flexShrink:0}}>{icon}</span>
-                <span style={{fontSize:"clamp(0.65rem,2vw,0.75rem)",color:"#5a7040",letterSpacing:"0.04em",lineHeight:1.5}}>{info}</span>
+                <span style={{fontSize:"clamp(0.92rem,2.2vw,1.05rem)",color:"#9ac850",letterSpacing:"0.04em",lineHeight:1.5}}>{info}</span>
               </div>
             ))}
           </div>
 
           {/* Study Tips */}
           <div>
-            <div style={{fontSize:"clamp(0.65rem,2vw,0.72rem)",letterSpacing:"0.35em",color:"#a8d060",textTransform:"uppercase",marginBottom:"1rem",paddingBottom:"0.5rem",borderBottom:"1px solid rgba(168,208,96,0.15)"}}>FIELD TIPS</div>
+            <div style={{fontSize:"clamp(0.92rem,2.2vw,1.05rem)",letterSpacing:"0.35em",color:"#a8d060",textTransform:"uppercase",marginBottom:"1rem",paddingBottom:"0.5rem",borderBottom:"1px solid rgba(168,208,96,0.15)"}}>FIELD TIPS</div>
             {[["🌅","Study 2–3 hrs daily, same time every day"],["📰","Read newspaper 30 min daily for GK"],["📓","Maintain an error log — revisit weekly"],["🔁","Revise every 7th day without fail"],["🧪","Attempt 1 mock test per week minimum"],["😴","Sleep 7–8 hrs. Rest = better retention"]
             ].map(([icon,tip])=>(
               <div key={tip} style={{display:"flex",alignItems:"flex-start",gap:"0.5rem",padding:"0.35rem 0",borderBottom:"1px dashed rgba(168,208,96,0.07)"}}>
                 <span style={{fontSize:"0.8rem",flexShrink:0}}>{icon}</span>
-                <span style={{fontSize:"clamp(0.62rem,1.8vw,0.72rem)",color:"#5a7040",letterSpacing:"0.04em",lineHeight:1.5}}>{tip}</span>
+                <span style={{fontSize:"clamp(0.88rem,2.2vw,1rem)",color:"#9ac850",letterSpacing:"0.04em",lineHeight:1.5}}>{tip}</span>
               </div>
             ))}
           </div>
         </div>
 
         {/* Divider */}
-        <div style={{maxWidth:"960px",margin:"0 auto",padding:"0 clamp(0.8rem,3vw,1.5rem)"}}>
+        <div style={{maxWidth:"1400px",margin:"0 auto",padding:"0 clamp(1rem,4vw,3rem)"}}>
           <div style={{height:"1px",background:"linear-gradient(90deg,transparent,rgba(168,208,96,0.25),transparent)"}}/>
         </div>
 
         {/* Bottom bar */}
-        <div style={{maxWidth:"960px",margin:"0 auto",padding:"clamp(1rem,3vw,1.4rem) clamp(0.8rem,3vw,1.5rem)",display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:"0.8rem"}}>
-          <div style={{fontSize:"clamp(0.6rem,1.8vw,0.7rem)",color:"#3a5028",letterSpacing:"0.1em"}}>
+        <div style={{maxWidth:"1400px",margin:"0 auto",padding:"clamp(1rem,3vw,1.4rem) clamp(1rem,4vw,3rem)",display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:"0.8rem"}}>
+          <div style={{fontSize:"clamp(0.85rem,2vw,0.95rem)",color:"#7aaa48",letterSpacing:"0.1em"}}>
             © {new Date().getFullYear()} CDS MISSION PLAN &nbsp;·&nbsp; FOR PERSONAL STUDY USE ONLY
           </div>
-          <div style={{display:"flex",gap:"1rem",flexWrap:"wrap"}}>
-            {["PRIVACY POLICY","DISCLAIMER","CONTACT"].map(link=>(
-              <span key={link} style={{fontSize:"clamp(0.58rem,1.8vw,0.65rem)",color:"#3a5028",letterSpacing:"0.12em",cursor:"pointer",transition:"color 0.2s",textTransform:"uppercase"}}
+          <div style={{display:"flex",gap:"1rem",flexWrap:"wrap",alignItems:"center"}}>
+            {["PRIVACY POLICY","DISCLAIMER"].map(link=>(
+              <span key={link} style={{fontSize:"clamp(0.75rem,2vw,0.88rem)",color:"#7aaa48",letterSpacing:"0.12em",cursor:"pointer",transition:"color 0.2s",textTransform:"uppercase"}}
                 onMouseEnter={e=>e.target.style.color="#a8d060"}
-                onMouseLeave={e=>e.target.style.color="#3a5028"}>
+                onMouseLeave={e=>e.target.style.color="#7aaa48"}>
                 {link}
               </span>
             ))}
+            <a href="mailto:zenertrizz@gmail.com"
+              style={{fontSize:"clamp(0.75rem,2vw,0.88rem)",color:"#a8d060",letterSpacing:"0.1em",textDecoration:"none",border:"1px solid rgba(168,208,96,0.4)",padding:"0.25rem 0.75rem",background:"rgba(168,208,96,0.08)",transition:"all 0.2s",textTransform:"uppercase"}}
+              onMouseEnter={e=>{e.currentTarget.style.background="rgba(168,208,96,0.2)";e.currentTarget.style.boxShadow="0 0 14px rgba(168,208,96,0.35)";}}
+              onMouseLeave={e=>{e.currentTarget.style.background="rgba(168,208,96,0.08)";e.currentTarget.style.boxShadow="none";}}>
+              ✉ zenertrizz@gmail.com
+            </a>
           </div>
-          <div style={{fontSize:"clamp(0.58rem,1.8vw,0.65rem)",color:"#3a5028",letterSpacing:"0.08em"}}>
+          <div style={{fontSize:"clamp(0.85rem,2vw,0.95rem)",color:"#7aaa48",letterSpacing:"0.08em"}}>
             FILE REF: CDS/WE/2026 &nbsp;·&nbsp; ALL RIGHTS RESERVED
           </div>
         </div>
